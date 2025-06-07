@@ -1,0 +1,13 @@
+import boto3
+import datetime
+from pprint import pprint
+region = "ap-south-1"
+ec2 = boto3.client('ec2', region_name=region)
+response = ec2.describe_instances(Filters=[{'Name': 'instance-state-name', 'Values': ['stopped']},{'Name': 'tag:Application_Team', 'Values':['Microdegee_app']}])
+for response in response['Reservations']:
+    for instance in response['Instances']:
+        volume = ec2.describe_volumes(Filters=[{'Name': 'attachment.instance-id', 'Values': [instance['InstanceId']]}])
+        for disk in volume['Volumes']:
+            volume = disk['Attachments'][0]['VolumeId']
+            response = ec2.create_snapshot(VolumeId=volume)
+print("Snapshot complete for the selected instances")
