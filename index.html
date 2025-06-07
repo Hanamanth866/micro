@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudFront Demo Site</title>
+    <style>
+        body {
+            background: #ef7f1a;
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }    
+        h1 {
+            color: #4a148c;
+            font-size: 3em;
+        }
+        h2 {
+            color: #880e4f;
+            font-size: 2em;
+            margin-top: 50px;
+        }
+        p {
+            color: #1a237e;
+            font-size: 1.2em;
+        }
+        video, img {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+            border: 3px solid #4a148c;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Microdegree Cloudfront Website</h1>
+    <h2>Powered By Microdegree</h2>
+    <p>This content is serverd from an s3 static website</p>
+    <p id="location"></p>
+
+    <script>
+        fetch('https://cloudfolksweb.s3.amazonaws/metadata.json')
+             .then(response => response.json())
+             .then(data => {
+                const location = data.location;
+                document.getElementById('location').innerText = 'This content is being served from: ${location}';
+                document.getElementById('video-location').innerText = 'Video source location: ${location}';
+                document.getElemntById('image-location').innerText = 'Image source location: ${location}';
+             })
+             .catch(error => {
+                console.error('Error fetching location:', error);
+             })
+    </script>
+
+    <h2>CloudFront Introduction Video</h2>
+    <video controls>
+        <source src="https://microdegree-cloudfront-demo-check.s3.ap-south-1.amazonaws.com/file_example_MP4_1920_18MG.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <p id="video-location"></p>
+
+    <h2>Sample Image for Cache Invalidation check</h2>
+    <img src="https://microdegree-cloudfront-demo-check.s3.ap-south-1.amazonaws.com/SamplePNGImage_100kbmb.png" alt="Sample Image">
+    <p id="image-location"></p>
+
+</body>
+</html>
