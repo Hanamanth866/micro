@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#create 10 instances
+INSTANCE_IDS=$(aws ec2 run-instances \
+ --region "ap-south-1" \
+  --image-id "ami-01b6d88af12965bb6"  \
+  --count 10 \
+  --instance-type "t2.micro" \
+  --key-name  "piu" \
+  --security-group-ids "my-new-sg" \
+  --query 'Instances[*].InstanceId' \
+  --output text)
+
+  echo "Launched instances: $INSTANCE_IDS"
+
+  # wait 1 minutes instance.
+  sleep 60
+
+  #terminate instance
+  aws ec2 terminate-instances --instance-ids $INSTANCE_IDS
+
+  echo "terminated instances: $INSTANCE_IDS"
